@@ -31,14 +31,21 @@ def formatter(tokens, indentation_type=FOUR_SPACES):
         if tokens[i-1] == COLON:
             if type(token) is str:
                 formatted_json += f'"{token}"'
+            elif token is None:
+                formatted_json += 'null'
             else:
                 formatted_json += str(token).lower()
             continue
 
         if type(token) is str:
             formatted_json += f'{indentation*indentation_type}"{token}"'
-        else:
-            formatted_json += f'{indentation*indentation_type}{str(token).lower()}'
+            continue
+        
+        if token is None:
+            formatted_json += f'{indentation*indentation_type}null'
+            continue
+
+        formatted_json += f'{indentation*indentation_type}{str(token).lower()}'
     
     return formatted_json
     

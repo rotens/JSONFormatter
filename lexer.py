@@ -91,6 +91,6 @@ class Lexer:
         string_len = len(string)
 
         if string_len >= 4 and string[:4] == "null":
-            return True, string[4]
+            return True, string[4:]
 
         return None, string
