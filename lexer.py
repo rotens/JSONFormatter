@@ -11,6 +11,8 @@ class Lexer:
         self.tokens = []
 
     def lex(self, string):
+        self.tokens = []
+        
         while len(string):
             json_string, string = self.lex_string(string)
             if json_string is not None:

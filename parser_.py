@@ -9,7 +9,10 @@ class Parser:
     def __init__(self) -> None:
         self.test = ""
 
-    def parse(self, tokens):
+    def parse(self, tokens, is_root=False):
+        if is_root and not self.parse_root(tokens):
+            raise JsonParsingException('Root element not valid')
+
         t = tokens[0]
 
         if t == OPENBRACKET:
@@ -18,6 +21,23 @@ class Parser:
             return self.parse_object(tokens[1:])
         else:
             return t, tokens[1:]
+
+    def parse_root(self, tokens):
+        t = tokens[0]
+
+        if len(tokens) == 1:
+            if t is None:
+                return True 
+            if type(t) in (str, int, float, bool):
+                return True
+            return False
+
+        if t == OPENBRACE and tokens[-1] == CLOSEBRACE:
+            return True
+        if t == OPENBRACKET and tokens[-1] == CLOSEBRACKET:
+            return True
+
+        return False
 
 
     def parse_array(self, tokens):
