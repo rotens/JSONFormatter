@@ -7,3 +7,6 @@ CLOSEBRACE = '}'
 QUOTE = '"'
 WHITESPACE = [' ', '\t', '\b', '\n', '\r']
 JSON_SYNTAX = [COMMA, COLON, OPENBRACKET, CLOSEBRACKET, OPENBRACE, CLOSEBRACE]
+FALSE_LEN = len("false")
+TRUE_LEN = len("true")
+NULL_LEN = len("null")

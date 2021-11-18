@@ -12,7 +12,7 @@ class Lexer:
 
     def lex(self, string):
         self.tokens = []
-        
+
         while len(string):
             json_string, string = self.lex_string(string)
             if json_string is not None:
@@ -52,7 +52,10 @@ class Lexer:
         else:
             return None, string
 
-        for c in string:
+        for i, c in enumerate(string):
+            if c == QUOTE and string[i-1] == "\\":
+                json_string += c
+                continue
             if c == QUOTE:
                 return json_string, string[len(json_string)+1:]
             json_string += c
@@ -61,7 +64,7 @@ class Lexer:
 
     def lex_number(self, string):
         json_number = ""
-        number_characters = [str(d) for d in range(0, 10)] + ["-", "e", "."]
+        number_characters = [str(d) for d in range(0, 10)] + ["-", "e", ".", "+"]
 
         for c in string:
             if c in number_characters:
@@ -77,22 +80,25 @@ class Lexer:
         if "." in json_number:
             return float(json_number), rest
 
+        if "e" in json_number:
+            return float(json_number), rest
+
         return int(json_number), rest
 
     def lex_bool(self, string):
         string_len = len(string)
 
-        if string_len >= 4 and string[:4] == "true":
-            return True, string[4:]
-        elif string_len >= 5 and string[:5] == "false":
-            return False, string[5:]
+        if string_len >= TRUE_LEN and string[:TRUE_LEN] == "true":
+            return True, string[TRUE_LEN:]
+        elif string_len >= FALSE_LEN and string[:FALSE_LEN] == "false":
+            return False, string[FALSE_LEN:]
 
         return None, string
 
     def lex_null(self, string):
         string_len = len(string)
 
-        if string_len >= 4 and string[:4] == "null":
-            return True, string[4:]
+        if string_len >= NULL_LEN and string[:NULL_LEN] == "null":
+            return True, string[NULL_LEN:]
 
         return None, string
