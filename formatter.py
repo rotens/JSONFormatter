@@ -2,7 +2,7 @@ from constants import *
 
 FOUR_SPACES = "    "
 
-def formatter(tokens, indentation_type=FOUR_SPACES):
+def format_json(tokens, indentation_type=FOUR_SPACES):
     indentation = 0
     formatted_json = ''
 

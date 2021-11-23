@@ -1,6 +1,6 @@
 from lexer import Lexer, JsonLexingException
 from parser_ import Parser, JsonParsingException
-from formatter import formatter
+from formatter import format_json
 import tkinter as tk
 import tkinter.scrolledtext as tkscrolled
 
@@ -113,7 +113,7 @@ class GraphicInterface(tk.Frame):
         if not self.validate():
             return  
 
-        formatted_json = formatter(self.tokens)
+        formatted_json = format_json(self.tokens)
         self.output_text.insert(tk.INSERT, formatted_json)
         self.output_text["state"] = "disabled"
 
@@ -125,16 +125,6 @@ class GraphicInterface(tk.Frame):
 
 
 def main():
-    # lexer = Lexer()
-    # parser = Parser()
-    # # tokens = lexer.lex('{"foo": [1, 2, {"bar": 2}, null], "bar": null}')
-    # tokens = lexer.lex('{"foo": "tt\t\""}')
-    # print(tokens)
-    # print(parser.parse(tokens, is_root=True))
-    
-    # print(tokens)
-    # print(formatter(tokens))
-
     root = tk.Tk()
     root.title("JSON Formatter")
     root.resizable(False, False)
