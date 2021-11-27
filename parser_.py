@@ -6,9 +6,6 @@ class JsonParsingException(Exception):
 
 
 class Parser:
-    def __init__(self) -> None:
-        self.test = ""
-
     def parse(self, tokens, is_root=False):
         if is_root and not self.parse_root(tokens):
             raise JsonParsingException('Root element not valid')
@@ -47,17 +44,16 @@ class Parser:
         while True:
             tokens = self.parse(tokens)
 
-            t = tokens[0]
+            t = self.get_token(tokens)
             if t == CLOSEBRACKET:
                 return tokens[1:]
+            elif t is None:
+                raise JsonParsingException('Expected closing brace.')
             elif t != COMMA:
                 raise JsonParsingException('Expected comma after array\'s element')
-            else:
-                tokens = tokens[1:]
 
-        # raise JsonParsingException('Expected closing array bracket')
+            tokens = tokens[1:]
 
-    
     def parse_object(self, tokens):
         t = tokens[0]
         if t == CLOSEBRACE:
@@ -75,14 +71,19 @@ class Parser:
 
             tokens = self.parse(tokens[1:])
 
-            t = tokens[0]
+            t = self.get_token(tokens)
             if t == CLOSEBRACE:
                 return tokens[1:]
+            elif t is None:
+                raise JsonParsingException('Expected closing bracket.')
             elif t != COMMA:
-                raise JsonParsingException(f'Expected comma after pair in object, got: {json_key}')
-
+                raise JsonParsingException(
+                    f'Expected comma after pair in object, got: {json_key}')
+            
             tokens = tokens[1:]
-
-        # raise JsonParsingException('Expected end-of-object bracket')
-
-  
+    
+    def get_token(self, tokens):
+        try:
+            return tokens[0]
+        except IndexError:
+            return None
