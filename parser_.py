@@ -25,7 +25,7 @@ class Parser:
         if len(tokens) == 1:
             if t is None:
                 return True 
-            if type(t) in (str, int, float, bool):
+            if type(t) in (str, int, float, bool) and t not in JSON_SYNTAX:
                 return True
             return False
 
@@ -48,11 +48,13 @@ class Parser:
             if t == CLOSEBRACKET:
                 return tokens[1:]
             elif t is None:
-                raise JsonParsingException('Expected closing brace.')
+                raise JsonParsingException('Expected closing bracket')
             elif t != COMMA:
                 raise JsonParsingException('Expected comma after array\'s element')
-
+            
             tokens = tokens[1:]
+            if tokens[0] == CLOSEBRACKET or tokens[0] == CLOSEBRACE:
+                raise JsonParsingException('Expected array\'s element after comma')
 
     def parse_object(self, tokens):
         t = tokens[0]
@@ -61,26 +63,32 @@ class Parser:
 
         while True:
             json_key = tokens[0]
-            if type(json_key) is str:
+            if type(json_key) is str and json_key not in JSON_SYNTAX:
                 tokens = tokens[1:]
             else:
                 raise JsonParsingException(f'Expected string key, got: {json_key}')
 
             if tokens[0] != COLON:
                 raise JsonParsingException(f'Expected colon after key in object, got: {json_key}')
+            
+            tokens = tokens[1:]
+            if tokens[0] == CLOSEBRACE or tokens[0] == CLOSEBRACKET:
+                raise JsonParsingException('Expected value after colon in object')
 
-            tokens = self.parse(tokens[1:])
+            tokens = self.parse(tokens)
 
             t = self.get_token(tokens)
             if t == CLOSEBRACE:
                 return tokens[1:]
             elif t is None:
-                raise JsonParsingException('Expected closing bracket.')
+                raise JsonParsingException('Expected closing brace')
             elif t != COMMA:
                 raise JsonParsingException(
-                    f'Expected comma after pair in object, got: {json_key}')
+                    f'Expected comma or closing brace after pair in object, got: {t}')
             
             tokens = tokens[1:]
+            if tokens[0] == CLOSEBRACE or tokens[0] == CLOSEBRACKET:
+                raise JsonParsingException('Expected key after comma in object')
     
     def get_token(self, tokens):
         try:

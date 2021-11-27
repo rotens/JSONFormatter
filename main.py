@@ -2,7 +2,6 @@ from lexer import Lexer, JsonLexingException
 from parser_ import Parser, JsonParsingException
 from formatter import format_json
 import tkinter as tk
-import tkinter.scrolledtext as tkscrolled
 
 
 RED_COLOR = "#FF0000"
@@ -28,7 +27,7 @@ class GraphicInterface(tk.Frame):
         # Input text
         self.input_text_frame = tk.Frame(self, borderwidth=1, relief="sunken")
         self.input_text = tk.Text(
-            self.input_text_frame, width=60, height=45, wrap="none", borderwidth=0)
+            self.input_text_frame, width=60, height=30, wrap="none", borderwidth=0)
         textVsb = tk.Scrollbar(
             self.input_text_frame, orient="vertical", command=self.input_text.yview)
         textHsb = tk.Scrollbar(
@@ -48,7 +47,7 @@ class GraphicInterface(tk.Frame):
         # Output text
         self.output_text_frame = tk.Frame(self, borderwidth=1, relief="sunken")
         self.output_text = tk.Text(
-            self.output_text_frame, width=60, height=45, wrap="none", borderwidth=0,
+            self.output_text_frame, width=60, height=30, wrap="none", borderwidth=0,
             state="disabled")
         textVsb = tk.Scrollbar(
             self.output_text_frame, orient="vertical", command=self.output_text.yview)
@@ -121,7 +120,6 @@ class GraphicInterface(tk.Frame):
         self.master.clipboard_clear()
         output_text = self.output_text.get("1.0", "end-1c")
         self.master.clipboard_append(output_text)
-
 
 
 def main():
