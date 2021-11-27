@@ -25,7 +25,7 @@ class Parser:
         if len(tokens) == 1:
             if t is None:
                 return True 
-            if type(t) in (str, int, float, bool) and t not in JSON_SYNTAX:
+            if type(t) in (str, int, float, bool):
                 return True
             return False
 

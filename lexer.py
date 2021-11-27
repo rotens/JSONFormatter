@@ -77,8 +77,6 @@ class Lexer:
             return None, string
 
         if "." in json_number:
-            if len(json_number) == 1:
-                return None, string
             return float(json_number), rest
 
         if "e" in json_number:
