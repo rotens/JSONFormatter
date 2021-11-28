@@ -25,14 +25,35 @@ class Parser:
         if len(tokens) == 1:
             if t is None:
                 return True 
-            if type(t) in (str, int, float, bool):
+            if type(t) in (str, int, float, bool) and t not in JSON_SYNTAX:
                 return True
             return False
 
         if t == OPENBRACE and tokens[-1] == CLOSEBRACE:
-            return True
+            brace = 0
+            for i, token in enumerate(tokens):
+                if token == OPENBRACE:
+                    brace += 1
+                if token == CLOSEBRACE:
+                    brace -= 1
+                if brace == 0 and i != len(tokens)-1:
+                    return False
+            if brace == 0:
+                return True
+            return False
+
         if t == OPENBRACKET and tokens[-1] == CLOSEBRACKET:
-            return True
+            bracket = 0
+            for i, token in enumerate(tokens):
+                if token == OPENBRACKET:
+                    bracket += 1
+                if token == CLOSEBRACKET:
+                    bracket -= 1
+                if bracket == 0 and i != len(tokens)-1:
+                    return False
+            if bracket == 0:
+                return True
+            return False
 
         return False
 
@@ -69,7 +90,8 @@ class Parser:
                 raise JsonParsingException(f'Expected string key, got: {json_key}')
 
             if tokens[0] != COLON:
-                raise JsonParsingException(f'Expected colon after key in object, got: {json_key}')
+                raise JsonParsingException(
+                    f'Expected colon after key in object, got: {json_key}')
             
             tokens = tokens[1:]
             if tokens[0] == CLOSEBRACE or tokens[0] == CLOSEBRACKET:
