@@ -38,7 +38,7 @@ class Parser:
                     brace -= 1
                 if brace == 0 and i != len(tokens)-1:
                     return False
-            if brace == 0:
+            if brace >= 0:
                 return True
             return False
 
@@ -51,7 +51,7 @@ class Parser:
                     bracket -= 1
                 if bracket == 0 and i != len(tokens)-1:
                     return False
-            if bracket == 0:
+            if bracket >= 0:
                 return True
             return False
 
@@ -71,7 +71,8 @@ class Parser:
             elif t is None:
                 raise JsonParsingException('Expected closing bracket')
             elif t != COMMA:
-                raise JsonParsingException('Expected comma after array\'s element')
+                raise JsonParsingException(
+                    'Expected comma or closing bracket after array\'s element')
             
             tokens = tokens[1:]
             if tokens[0] == CLOSEBRACKET or tokens[0] == CLOSEBRACE:
